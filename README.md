@@ -31,24 +31,48 @@ trials).
 
 ## Status
 
-🚧 In development.
+🚧 Working MVP — collaborative editing over WebSockets, end-to-end.
 
-- ✅ CRDT engine (RGA / causal tree) — 9 tests
-- ⏳ WebSocket hub: rooms, op relay, late-joiner sync, presence
-- ⏳ Git-style snapshots / history
-- ⏳ Web frontend
+- ✅ CRDT engine (RGA / causal tree) in Go — 11 tests
+- ✅ WebSocket hub: rooms, op relay, late-joiner sync, presence — integration tests
+- ✅ Web frontend (textarea) with a JS port of the CRDT; live multi-client sync
+- ✅ Verified end-to-end: two clients type concurrently and converge
+- ⏳ Git-style snapshots / history (reuse content-addressed objects)
+- ⏳ Richer editor (CodeMirror/Monaco), live cursors
 - ⏳ Deploy
+
+## Run it
+
+```bash
+go run ./cmd/server          # serves http://localhost:8090
+```
+
+Open `http://localhost:8090` in two browser tabs and type — edits sync live.
+Use a URL hash to pick a room, e.g. `http://localhost:8090/#myroom`.
 
 ## Build & test
 
 ```bash
-go test ./...
+go test ./...                # Go: CRDT + hub
 ```
+
+## Architecture
+
+```
+Browser (textarea + web/crdt.js)  ⇄  WebSocket  ⇄  Go hub (rooms, presence)
+        client-side CRDT replica                     server canonical replica
+                                                      + ordered op log
+```
+
+Both client and server run the **same** CRDT, so the server only relays ops
+(and snapshots the log for late joiners). The wire format is pinned by tests so
+the Go and JavaScript implementations stay interoperable.
 
 ## Tech
 
-- Go (standard library; WebSocket transport TBD)
-- Causal-tree / RGA sequence CRDT (hand-implemented)
+- Go (standard library + gorilla/websocket)
+- Causal-tree / RGA sequence CRDT (hand-implemented in both Go and JS)
+- Dependency-free web frontend (no build step)
 
 ## License
 

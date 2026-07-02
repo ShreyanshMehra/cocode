@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cocode — collaborative editor</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">cocode</div>
+    <div class="meta">
+      <span id="room" class="pill">room: default</span>
+      <span id="presence" class="pill">1 online</span>
+      <span id="status" class="pill status-connecting">connecting…</span>
+    </div>
+  </header>
+
+  <main>
+    <p class="hint">
+      Open this page in two tabs (or share the URL) and type — edits sync live and
+      converge conflict-free via a hand-built CRDT. Change the room with a URL hash,
+      e.g. <code>#myroom</code>.
+    </p>
+    <textarea id="editor" spellcheck="false"
+      placeholder="Start typing to collaborate…"></textarea>
+  </main>
+
+  <script src="/crdt.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

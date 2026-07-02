@@ -24,8 +24,8 @@ import (
 // is Lamport-like: higher Seq wins, ties broken by Site, so "more recent" edits
 // sort first among concurrent siblings.
 type ID struct {
-	Seq  uint64
-	Site uint64
+	Seq  uint64 `json:"seq"`
+	Site uint64 `json:"site"`
 }
 
 // Root is the virtual parent of the first characters in the document.
