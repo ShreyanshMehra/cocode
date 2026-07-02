@@ -1,0 +1,16 @@
+# Binaries
+/server
+/server.exe
+cocode
+cocode.exe
+*.exe
+
+# Test / coverage
+*.test
+*.out
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
