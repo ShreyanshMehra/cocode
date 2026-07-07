@@ -11,7 +11,7 @@
     <div class="brand">cocode</div>
     <div class="meta">
       <span id="room" class="pill">room: default</span>
-      <span id="presence" class="pill">1 online</span>
+      <span id="participants" class="participants"></span>
       <span id="status" class="pill status-connecting">connecting…</span>
     </div>
   </header>
@@ -22,8 +22,23 @@
       converge conflict-free via a hand-built CRDT. Change the room with a URL hash,
       e.g. <code>#myroom</code>.
     </p>
-    <textarea id="editor" spellcheck="false"
-      placeholder="Start typing to collaborate…"></textarea>
+    <div class="workspace">
+      <textarea id="editor" spellcheck="false"
+        placeholder="Start typing to collaborate…"></textarea>
+      <aside class="sidebar">
+        <div class="panel">
+          <div class="panel-head">
+            <span>Versions</span>
+            <button id="save-btn" class="btn">Save version</button>
+          </div>
+          <ul id="versions" class="versions"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span>Diff</span></div>
+          <pre id="diff" class="diff"><span class="muted">Select two versions to compare.</span></pre>
+        </div>
+      </aside>
+    </div>
   </main>
 
   <script src="/crdt.js"></script>
