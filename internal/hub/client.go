@@ -3,11 +3,15 @@ package hub
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/gorilla/websocket"
 )
+
+var clientSeq atomic.Uint64
 
 const (
 	writeWait  = 10 * time.Second
@@ -46,6 +50,18 @@ func (h *Hub) room(id string) *Room {
 	return r
 }
 
+// RoomValue returns the current canonical text of a room. The second result is
+// false if the room does not exist yet.
+func (h *Hub) RoomValue(id string) (string, bool) {
+	h.mu.Lock()
+	r, ok := h.rooms[id]
+	h.mu.Unlock()
+	if !ok {
+		return "", false
+	}
+	return r.Value(), true
+}
+
 // ServeWS upgrades an HTTP request to a WebSocket and joins it to a room. The
 // room is taken from the "room" query parameter (default "default").
 func (h *Hub) ServeWS(w http.ResponseWriter, req *http.Request) {
@@ -59,7 +75,12 @@ func (h *Hub) ServeWS(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	room := h.room(roomID)
-	c := &Client{conn: conn, room: room, send: make(chan Message, 64)}
+	c := &Client{
+		id:   "c" + strconv.FormatUint(clientSeq.Add(1), 10),
+		conn: conn,
+		room: room,
+		send: make(chan Message, 64),
+	}
 	room.register <- c
 
 	go c.writePump()
@@ -68,6 +89,7 @@ func (h *Hub) ServeWS(w http.ResponseWriter, req *http.Request) {
 
 // Client is a single WebSocket connection participating in a room.
 type Client struct {
+	id   string
 	conn *websocket.Conn
 	room *Room
 	send chan Message
@@ -101,6 +123,8 @@ func (c *Client) readPump() {
 		}
 		if msg.Type == MsgOp && msg.Op != nil {
 			c.room.incoming <- inbound{from: c, op: *msg.Op}
+		} else if msg.Type == MsgCursor {
+			c.room.cursor <- cursorInbound{from: c, pos: msg.Cursor}
 		}
 	}
 }
