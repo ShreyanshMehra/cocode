@@ -37,9 +37,22 @@ trials).
 - ✅ WebSocket hub: rooms, op relay, late-joiner sync, presence — integration tests
 - ✅ Web frontend (textarea) with a JS port of the CRDT; live multi-client sync
 - ✅ Verified end-to-end: two clients type concurrently and converge
-- ⏳ Git-style snapshots / history (reuse content-addressed objects)
-- ⏳ Richer editor (CodeMirror/Monaco), live cursors
+- ✅ Git-style snapshots / history (content-addressed, deduplicated blobs)
+- ✅ Presence registry: each collaborator gets a name/color + cursor tracking
+- ✅ Version diff (LCS) and language detection, exposed over an HTTP API
+- ⏳ Richer editor (CodeMirror/Monaco), rendered remote cursors
 - ⏳ Deploy
+
+## HTTP API
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/ws?room=<id>` | WebSocket for real-time collaboration |
+| `POST` | `/api/snapshot?room=<id>&message=<m>` | Save the room's current text as a version |
+| `GET` | `/api/versions?room=<id>` | List a room's saved versions |
+| `GET` | `/api/version?room=<id>&id=<vid>` | Fetch one version's content |
+| `GET` | `/api/diff?room=<id>&a=<vid>&b=<vid>` | Unified line diff between two versions |
+| `GET` | `/api/lang?filename=<f>&content=<c>` | Detect the programming language |
 
 ## Run it
 
@@ -53,7 +66,7 @@ Use a URL hash to pick a room, e.g. `http://localhost:8090/#myroom`.
 ## Build & test
 
 ```bash
-go test ./...                # Go: CRDT + hub
+go test ./...                # all packages
 ```
 
 ## Architecture
