@@ -1,3 +1,14 @@
+---
+title: cocode
+emoji: 👥
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+app_port: 8000
+pinned: false
+license: mit
+---
+
 # cocode
 
 > A collaborative real-time code editor, built in Go with a hand-implemented

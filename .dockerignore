@@ -1,0 +1,9 @@
+.git
+.gitignore
+README.md
+LICENSE
+Dockerfile
+.dockerignore
+web-src/node_modules
+web-src/package-lock.json
+**/*_test.go
