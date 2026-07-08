@@ -11,6 +11,7 @@
     <div class="brand">cocode</div>
     <div class="meta">
       <span id="room" class="pill">room: default</span>
+      <select id="lang" class="lang-select" title="Language"></select>
       <span id="participants" class="participants"></span>
       <span id="status" class="pill status-connecting">connecting…</span>
     </div>
@@ -19,12 +20,11 @@
   <main>
     <p class="hint">
       Open this page in two tabs (or share the URL) and type — edits sync live and
-      converge conflict-free via a hand-built CRDT. Change the room with a URL hash,
-      e.g. <code>#myroom</code>.
+      converge conflict-free via a hand-built CRDT. You'll see other people's
+      colored cursors. Change the room with a URL hash, e.g. <code>#myroom</code>.
     </p>
     <div class="workspace">
-      <textarea id="editor" spellcheck="false"
-        placeholder="Start typing to collaborate…"></textarea>
+      <div id="editor" class="editor-host"></div>
       <aside class="sidebar">
         <div class="panel">
           <div class="panel-head">
@@ -41,7 +41,9 @@
     </div>
   </main>
 
+  <script src="/vendor/cocode-editor.js"></script>
   <script src="/crdt.js"></script>
+  <script src="/editor-sync.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

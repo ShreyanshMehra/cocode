@@ -72,22 +72,58 @@ main {
   border: 1px solid var(--border);
 }
 
-#editor {
+.editor-host {
   flex: 1;
-  width: 100%;
-  resize: none;
-  padding: 16px;
-  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--text);
-  background: var(--panel);
+  min-width: 0;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
+}
+
+/* CodeMirror fills its host and scrolls internally. */
+.editor-host .cm-editor {
+  height: 100%;
+  font-size: 14px;
+}
+.editor-host .cm-scroller {
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+}
+.editor-host .cm-focused {
   outline: none;
 }
 
-#editor:focus { border-color: var(--accent); }
+/* Remote cursors (rendered as widget decorations). */
+.cm-remote-cursor {
+  border-left: 2px solid;
+  margin-left: -1px;
+  position: relative;
+  display: inline-block;
+  height: 1.1em;
+  vertical-align: text-bottom;
+}
+.cm-remote-label {
+  position: absolute;
+  top: -1.35em;
+  left: -1px;
+  font-size: 10px;
+  line-height: 1.3;
+  padding: 0 4px;
+  border-radius: 3px 3px 3px 0;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.lang-select {
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--text);
+  background: #0f1420;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
 
 /* Participants */
 .participants {
@@ -123,7 +159,7 @@ main {
   min-height: 0;
 }
 
-.workspace #editor { flex: 1; }
+.workspace .editor-host { flex: 1; }
 
 .sidebar {
   width: 300px;

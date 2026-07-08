@@ -14,3 +14,7 @@ cocode.exe
 .idea/
 .DS_Store
 Thumbs.db
+
+# Node (build tooling for the vendored editor bundle; the bundle IS committed)
+web-src/node_modules/
+web-src/package-lock.json
