@@ -14,9 +14,13 @@ license: mit
 > A collaborative real-time code editor, built in Go with a hand-implemented
 > CRDT for conflict-free concurrent editing.
 
+**▶ Live demo: https://shreyansh112-cocode.hf.space** — open it in two tabs (add
+`#myroom` to both URLs to share a room) and type; edits and colored cursors sync
+live. It's a free, sleeping Space, so the first load may take ~30s to wake.
+
 Multiple people edit the same document simultaneously; edits converge without
 conflicts thanks to a **causal-tree / RGA sequence CRDT** implemented from
-scratch (no CRDT libraries). Planned: WebSocket rooms with presence, and
+scratch (no CRDT libraries). It ships with WebSocket rooms and presence, plus
 git-style content-addressed snapshots for versioning (reusing ideas from
 [gitfromscratch](https://github.com/ShreyanshMehra/gitfromscratch)).
 
@@ -46,15 +50,16 @@ trials).
 
 - ✅ CRDT engine (RGA / causal tree) in Go — 11 tests
 - ✅ WebSocket hub: rooms, op relay, late-joiner sync, presence — integration tests
-- ✅ Web frontend (textarea) with a JS port of the CRDT; live multi-client sync
+- ✅ Web frontend with a JS port of the CRDT; live multi-client sync
 - ✅ Verified end-to-end: two clients type concurrently and converge
 - ✅ Git-style snapshots / history (content-addressed, deduplicated blobs)
 - ✅ Presence registry: each collaborator gets a name/color + cursor tracking
 - ✅ Version diff (LCS) and language detection, exposed over an HTTP API
 - ✅ CodeMirror 6 editor: **rendered remote cursors** (colored, named) + syntax
   highlighting for 9+ languages (auto-detected, with a manual selector)
+- ✅ Deployed live on Hugging Face Spaces (Docker); WebSockets verified through
+  the proxy (two-client presence relay + `wss://` handshake)
 - ⏳ Sandboxed code execution ("Run")
-- ⏳ Deploy
 
 ## Editor bundle (build once, committed)
 
@@ -94,12 +99,23 @@ Use a URL hash to pick a room, e.g. `http://localhost:8090/#myroom`.
 go test ./...                # all packages
 ```
 
+## Deploy
+
+Deployed as a Docker container (`Dockerfile` builds a static, CGO-free binary on
+`alpine`). The server reads `PORT` and `DATA_DIR` from the environment and the
+frontend picks `ws://`/`wss://` automatically, so it runs unchanged behind a
+TLS-terminating proxy.
+
+It's live on Hugging Face Spaces (Docker SDK, `app_port: 8000` in the README
+front matter). To redeploy: `git push hf main`. The same image runs on any
+Docker host (Render, Fly.io, Cloud Run, …).
+
 ## Architecture
 
 ```
-Browser (textarea + web/crdt.js)  ⇄  WebSocket  ⇄  Go hub (rooms, presence)
-        client-side CRDT replica                     server canonical replica
-                                                      + ordered op log
+Browser (CodeMirror 6 + web/crdt.js)  ⇄  WebSocket  ⇄  Go hub (rooms, presence)
+        client-side CRDT replica                        server canonical replica
+                                                         + ordered op log
 ```
 
 Both client and server run the **same** CRDT, so the server only relays ops
