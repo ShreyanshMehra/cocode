@@ -40,8 +40,22 @@ trials).
 - ✅ Git-style snapshots / history (content-addressed, deduplicated blobs)
 - ✅ Presence registry: each collaborator gets a name/color + cursor tracking
 - ✅ Version diff (LCS) and language detection, exposed over an HTTP API
-- ⏳ Richer editor (CodeMirror/Monaco), rendered remote cursors
+- ✅ CodeMirror 6 editor: **rendered remote cursors** (colored, named) + syntax
+  highlighting for 9+ languages (auto-detected, with a manual selector)
+- ⏳ Sandboxed code execution ("Run")
 - ⏳ Deploy
+
+## Editor bundle (build once, committed)
+
+The CodeMirror editor is bundled with esbuild into `web/vendor/cocode-editor.js`,
+which **is committed**, so the app runs with no build step. To change the editor,
+rebuild the bundle:
+
+```bash
+cd web-src
+npm install
+npm run build      # -> web/vendor/cocode-editor.js
+```
 
 ## HTTP API
 
