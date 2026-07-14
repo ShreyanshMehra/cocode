@@ -18,3 +18,6 @@ Thumbs.db
 # Node (build tooling for the vendored editor bundle; the bundle IS committed)
 web-src/node_modules/
 web-src/package-lock.json
+
+# Local interview prep notes (not for the repo)
+INTERVIEW_GUIDE.md
